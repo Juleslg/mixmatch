@@ -51,7 +51,7 @@
           {%- if title != blank and block.settings.collection != blank -%}
             {%- capture content -%}
               <product-list class="product-list">
-                {%- for product in block.settings.collection.products limit: block.settings.products_count -%}
+                {%- for product in block.settings.collection.products-%}
                   {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, block: block -%}
                 {%- else -%}
                   {%- for i in (1..block.settings.products_count) -%}
