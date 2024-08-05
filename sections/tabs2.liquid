@@ -52,6 +52,18 @@
 </div>
 {%- endif -%}
 
+<style>
+
+.product.list {
+  display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 10px; /* Adjusts spacing between grid items */
+      padding: 10px;
+}
+
+</style>
+
 {% schema %}
 {
   "name": "Collection Tabs",
