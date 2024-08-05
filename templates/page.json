@@ -43,7 +43,7 @@
           "type": "collection_tab",
           "settings": {
             "title": "Collection",
-            "collection": "",
+            "collection": "becher",
             "products_count": 16,
             "open_on_mobile": false
           }
