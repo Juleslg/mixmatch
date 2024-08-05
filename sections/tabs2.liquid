@@ -22,7 +22,7 @@
               <div class="prose">
 
               <div>
-                <product-list class="product-list {% if section.settings.hide_product_information %}product-list--compact{% endif %} justify-center">
+                <product-list class="product-list">
                   {%- for product in block.settings.collection.products limit: block.settings.products_count -%}
                     {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, block: block -%}
                   {%- else -%}
