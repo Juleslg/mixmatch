@@ -26,7 +26,7 @@
     --collection-items-per-row-large: 1;
   }
 
-  #shopify-section-{{ section.id }} .product-list {
+  .product-list {
     display: grid;
     grid-template-columns: repeat(var(--collection-items-per-row-{{ products_mobile_grid_mode }}, 1fr));
     gap: calc(var(--product-list-vertical-spacing-factor) * 20px) calc(var(--product-list-horizontal-spacing-factor) * 20px);
@@ -41,7 +41,7 @@
   }
 
   @media screen and (min-width: 1000px) {
-    #shopify-section-{{ section.id }} .product-list {
+    .product-list {
       grid-template-columns: repeat(var(--collection-items-per-row-{{ products_desktop_grid_mode }}, 1fr));
     }
   }
