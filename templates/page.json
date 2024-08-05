@@ -65,13 +65,14 @@
       ],
       "settings": {
         "separate_section_with_border": true,
-        "subheading": "Subheading",
+        "subheading": "hi",
         "title": "Collection Tabs",
         "text_alignment": "center",
         "hide_product_information": false,
-        "products_per_page": 16,
         "products_per_row_mobile": "2",
-        "products_size_desktop": "medium"
+        "products_size_desktop": "medium",
+        "horizontal_spacing_factor": 1,
+        "vertical_spacing_factor": 1
       }
     }
   },
