@@ -20,6 +20,8 @@
 
             <div role="tabpanel" slot="content" {% cycle '', 'hidden', 'hidden', 'hidden', 'hidden' %}>
               <div class="prose">
+
+              <div class="featured-collections-carousel__item">
                 <product-list class="product-list {% if section.settings.hide_product_information %}product-list--compact{% endif %} justify-center">
                   {%- for product in block.settings.collection.products limit: block.settings.products_count -%}
                     {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, block: block -%}
@@ -30,6 +32,7 @@
                   {%- endfor -%}
                 </product-list>
               </div>
+            </div>
             </div>
 
             <div slot="accordion-tab">
