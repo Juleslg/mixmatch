@@ -6,7 +6,7 @@
 
       <!-- DESKTOP LAYOUT -->
 
-      <x-tabs class="content-tabs {% if section.settings.text_alignment == 'center' %}content-tabs--center{% endif %} hidden sm:block">
+      <x-tabs class="content-tabs {% if section.settings.text_alignment == 'center' %}content-tabs--center{% endif %} hidden">
         <template shadowrootmode="open">
           <slot role="tablist" part="tab-list" name="title"></slot>
           <slot part="tab-panel-list" name="content"></slot>
