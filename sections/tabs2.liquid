@@ -6,7 +6,7 @@
 
       <!-- DESKTOP LAYOUT -->
 
-      <x-tabs class="content-tabs {% if section.settings.text_alignment == 'center' %}content-tabs--center{% endif %} hidden">
+      <x-tabs class="content-tabs {% if section.settings.text_alignment == 'center' %}content-tabs--center{% endif %} hidden sm:block">
         <template shadowrootmode="open">
           <slot role="tablist" part="tab-list" name="title"></slot>
           <slot part="tab-panel-list" name="content"></slot>
@@ -51,7 +51,7 @@
           {%- if title != blank and block.settings.collection != blank -%}
             {%- capture content -%}
               <product-list class="product-list">
-                {%- for product in block.settings.collection.products-%}
+                {%- for product in block.settings.collection.products -%}
                   {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, block: block -%}
                 {%- else -%}
                   {%- for i in (1..block.settings.products_count) -%}
