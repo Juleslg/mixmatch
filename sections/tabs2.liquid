@@ -21,7 +21,7 @@
 
               <div role="tabpanel" slot="content" {% cycle '', 'hidden', 'hidden', 'hidden', 'hidden' %}>
                 <div class="prose">
-                  
+
                   {{- content -}}
                   <product-list id="product-list-{{ section.id }}" class="product-list" collection-mobile-layout="{{ products_mobile_grid_mode }}" collection-desktop-layout="{{ products_desktop_grid_mode }}">
                 {%- for product in collection.products -%}
@@ -59,7 +59,7 @@
 
 {% schema %}
 {
-  "name": "t:sections.tabs.name",
+  "name": "tabs2",
   "class": "shopify-section--tabs",
   "max_blocks": 5,
   "disabled_on": {
