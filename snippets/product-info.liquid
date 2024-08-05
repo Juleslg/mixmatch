@@ -138,6 +138,7 @@ Supported variables
                 <a href="{{ product.url }}">{{ product_title }}</a>
               </h2>
             {%- endif -%}
+
           {%- when 'sku' -%}
             <variant-sku class="variant-sku text-sm text-subdued" form="{{ product_form_id }}" {% if product != blank and product.selected_or_first_available_variant.sku == blank %}hidden{% endif %}>
               {{- 'product.general.sku' | t }} {% if product != blank -%}{{ product.selected_or_first_available_variant.sku -}}{%- else -%}SK-123AB{%- endif -%}

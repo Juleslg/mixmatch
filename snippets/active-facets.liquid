@@ -59,7 +59,7 @@ Supported variables
       {%- capture default_url -%}{{ routes.search_url }}?q={{ search.terms }}&type=product&sort_by={{ search.sort_by }}{%- endcapture -%}
     {%- endif -%}
 
-    <a href="{{ default_url }}" is="facet-link" class="facets-clear-all text-subdued" style="padding-right: 1rem;">
+    <a href="{{ default_url }}" is="facet-link" class="facets-clear-all text-subdued">
       <span class="link">{{ 'collection.faceting.clear_filters' | t }}</span>
     </a>
   {%- endif -%}

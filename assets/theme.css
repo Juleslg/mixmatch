@@ -930,7 +930,6 @@ height-observer {
   align-content: start;
   display: grid;
   position: relative;
-  
 }
 
 .drawer::part(header) {
@@ -4175,13 +4174,9 @@ tfoot td {
   background-color: rgb(var(--background));
   z-index: 2;
   display: flex;
-  /* position: sticky; */
+  position: sticky;
   inset-block-start: var(--sticky-area-height);
   inset-inline-start: 0;
-  flex-direction: row;
-    /* justify-content: space-between; */
-
-    padding-bottom: 1.5rem;
 }
 
 .collection-toolbar .popover {
@@ -4225,21 +4220,18 @@ tfoot td {
 }
 
 .collection-toolbar__button {
-  opacity: 1;
+  opacity: .5;
   transition: opacity .2s;
 }
 
 .collection-toolbar__button:hover, .collection-toolbar__button.is-active {
-  opacity: .5;
+  opacity: 1;
 }
 
 @media screen and (min-width: 700px) {
   .collection-toolbar {
-    flex-direction: row;
-    /* justify-content: space-between; */
-
-    padding-bottom: 1.5rem;
-
+    flex-direction: row-reverse;
+    justify-content: space-between;
   }
 
   .collection-toolbar__button {
@@ -4294,7 +4286,6 @@ tfoot td {
   align-items: center;
   gap: .625rem;
   display: flex;
-  padding-right: 1rem;
 }
 
 .removable-facet {
@@ -4308,15 +4299,6 @@ tfoot td {
 
 .facets-clear-all {
   margin-inline-start: .625rem;
-}
-
-@media screen and (max-width: 700px) {
-  .removable-facet {
-    display: none;
-  }
-  .facets-clear-all.text-subdued {
-    display: none;
-  }
 }
 
 @media screen and (min-width: 700px) {
@@ -5838,7 +5820,7 @@ tfoot td {
   transition: opacity .2s, visibility .2s;
   position: absolute;
   inset-block-start: 1.25rem;
-  inset-inline-start: 0;
+  inset-inline-end: 0;
 }
 
 .product-gallery__zoom-button--hidden {
@@ -6154,7 +6136,6 @@ tfoot td {
 .product-sticky-bar.is-visible {
   opacity: 1;
   visibility: visible;
-  background-color: white;
 }
 
 .product-sticky-bar__info img {
@@ -6163,7 +6144,7 @@ tfoot td {
 
 @media screen and (min-width: 700px) {
   .product-sticky-bar {
-    /* inset-block: var(--sticky-area-height) auto; */
+    inset-block: var(--sticky-area-height) auto;
     background: rgb(var(--background-primary));
     border-block-end-width: 1px;
     grid-template-columns: minmax(0, 1fr) max-content;
@@ -7783,6 +7764,17 @@ transform: translate(-50%, -50%);
     width: 38px;
     
   }
+}
+@media only screen and (max-width: 749px) {
+.product-single__media {
+padding-top: 50% !important;
+
+  img {
+     height: 50%;
+    object-fit: contain;
+}
+
+}
 }
 
 /* EDIT End */

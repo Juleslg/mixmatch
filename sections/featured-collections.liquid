@@ -1,4 +1,4 @@
-{%- if section.blocks.size > 0 -%} 
+{%- if section.blocks.size > 0 -%}
   <style>
     #shopify-section-{{ section.id }} {
       --product-list-items-per-row: {{ section.settings.products_per_row_mobile | times: 1 }};
@@ -10,35 +10,8 @@
       #shopify-section-{{ section.id }} {
         --product-list-items-per-row: {{ section.settings.products_per_row_desktop }};
       }
-
-    }
-    #featured-collections-button2 {
-        display: none;
-      }
-
-      .circle-button {
-        background-color: transparent;
-        box-shadow: none;
-      }
-      .product-list {
-        --product-list-default-column-gap: 0.5rem;
-      }
-    
-    #shopify-section-{{ section.id }} .section-spacing {
-      padding-top: 20px !important; /* Adjust this value to your desired spacing */
     }
   </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var elements = document.querySelectorAll('.section-spacing.bordered-section');
-    var desiredPaddingTop = '20px'; // Set your desired padding value here
-    elements.forEach(function(element) {
-      element.style.marginTop = '0';
-      element.style.paddingTop = desiredPaddingTop;
-    });
-  });
-</script>
 
   <div class="section-spacing {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
     <div class="container">
@@ -96,12 +69,12 @@
 
                   <button is="carousel-prev-button" type="button" class="prev-next-button prev-next-button--prev circle-button hover:animate-icon-inline" aria-controls="{{ product_carousel_id }}" disabled>
                     <span class="sr-only">{{ 'general.accessibility.previous' | t }}</span>
-                    {%- render 'icon' with 'arrow-left-C', direction_aware: true -%}
+                    {%- render 'icon' with 'arrow-left', direction_aware: true -%}
                   </button>
 
                   <button is="carousel-next-button" type="button" class="prev-next-button prev-next-button--next circle-button hover:animate-icon-inline" aria-controls="{{ product_carousel_id }}">
                     <span class="sr-only">{{ 'general.accessibility.next' | t }}</span>
-                    {%- render 'icon' with 'arrow-right-C', direction_aware: true -%}
+                    {%- render 'icon' with 'arrow-right', direction_aware: true -%}
                   </button>
                 </product-list>
               {%- endif -%}
@@ -109,7 +82,7 @@
               {%- if block.settings.link_text != blank -%}
                 {%- assign button_link = block.settings.link_url | default: block.settings.collection.url | default: '#' -%}
 
-                <div id="featured-collections-button2" class="justify-self-center">
+                <div class="justify-self-center">
                   {%- render 'button', href: button_link, content: block.settings.link_text -%}
                 </div>
               {%- endif -%}
@@ -252,16 +225,15 @@
       ]
     }
   ],
-    "presets": [
-      {
-        "name": "t:sections.featured_collections.presets.featured_collections.name",
-        "blocks": [
-          {
-            "type": "collection"
-          }
-        ]
-      }
-    ]
-
+  "presets": [
+    {
+      "name": "t:sections.featured_collections.presets.featured_collections.name",
+      "blocks": [
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
