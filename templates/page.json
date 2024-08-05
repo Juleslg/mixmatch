@@ -19,65 +19,48 @@
         "page_width": "xs"
       }
     },
-    "tabs2_Mf4pHx": {
+    "tabs2_An7qqf": {
       "type": "tabs2",
       "blocks": {
-        "tab_XdMjzm": {
-          "type": "tab",
+        "collection_tab_rCnDiQ": {
+          "type": "collection_tab",
           "settings": {
-            "title": "Tab 1",
-            "content": "<p>Use this text to share information about your brand with your customers.<\/p>",
-            "page": "",
-            "open_on_mobile": false,
-            "collection": "aberta",
-            "hide_product_information": false
+            "title": "Collection",
+            "collection": "becher-tassen",
+            "products_count": 4,
+            "open_on_mobile": false
           }
         },
-        "tab_UYPb49": {
-          "type": "tab",
+        "collection_tab_J8Jmik": {
+          "type": "collection_tab",
           "settings": {
-            "title": "Tab 2",
-            "content": "<p>Describe a product, share announcements, or welcome customers to your store.<\/p>",
-            "page": "",
-            "open_on_mobile": false,
-            "collection": "",
-            "hide_product_information": false
+            "title": "Collection",
+            "collection": "aberta-mix",
+            "products_count": 4,
+            "open_on_mobile": false
           }
         },
-        "tab_L69qrQ": {
-          "type": "tab",
+        "collection_tab_yqBgmE": {
+          "type": "collection_tab",
           "settings": {
-            "title": "Tab",
-            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.<\/p>",
-            "page": "",
-            "open_on_mobile": false,
+            "title": "Collection",
             "collection": "",
-            "hide_product_information": false
-          }
-        },
-        "tab_JG4NKE": {
-          "type": "tab",
-          "settings": {
-            "title": "Tab 3",
-            "content": "<p>Share information about your shipping rates, return policy or contact information.<\/p>",
-            "page": "",
-            "open_on_mobile": false,
-            "collection": "",
-            "hide_product_information": false
+            "products_count": 4,
+            "open_on_mobile": false
           }
         }
       },
       "block_order": [
-        "tab_XdMjzm",
-        "tab_UYPb49",
-        "tab_L69qrQ",
-        "tab_JG4NKE"
+        "collection_tab_rCnDiQ",
+        "collection_tab_J8Jmik",
+        "collection_tab_yqBgmE"
       ],
       "settings": {
         "separate_section_with_border": true,
         "subheading": "Subheading",
-        "title": "Heading",
-        "text_alignment": "center"
+        "title": "Collection Tabs",
+        "text_alignment": "center",
+        "hide_product_information": false
       }
     },
     "171683634946c34166": {
@@ -91,7 +74,7 @@
   },
   "order": [
     "main",
-    "tabs2_Mf4pHx",
+    "tabs2_An7qqf",
     "171683634946c34166"
   ]
 }
