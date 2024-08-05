@@ -21,8 +21,18 @@
 
             <div role="tabpanel" slot="content" {% cycle '', 'hidden', 'hidden', 'hidden', 'hidden' %}>
               <div class="prose">
-                <div>hi</div>
                 {{- content -}}
+              </div>
+              <div>
+                {%- capture product_list -%}
+                {%- for product in block.settings.collection.products limit: block.settings.products_count -%}
+                  {%- render 'product-card', product: product, reveal: should_reveal, hide_product_information: section.settings.hide_product_information, block: block -%}
+                {%- else -%}
+                  {%- for i in (1..block.settings.products_count) -%}
+                    {%- render 'product-card-placeholder', reveal: should_reveal, loop_index: forloop.index0, hide_product_information: section.settings.hide_product_information -%}
+                  {%- endfor -%}
+                {%- endfor -%}
+                {%- endcapture -%}
               </div>
             </div>
 
@@ -59,6 +69,26 @@
     "groups": ["header", "custom.overlay"]
   },
   "settings": [
+    {
+  "type": "collection",
+  "id": "collection",
+  "label": "t:sections.tabs.blocks.tab.collection",
+  "info": "t:sections.tabs.blocks.tab.collection_info"
+},
+{
+  "type": "number",
+  "id": "products_count",
+  "label": "t:sections.tabs.blocks.tab.products_count",
+  "default": 4,
+  "min": 1,
+  "max": 10
+},
+{
+  "type": "checkbox",
+  "id": "hide_product_information",
+  "label": "t:sections.tabs.blocks.tab.hide_product_information",
+  "default": false
+},
     {
       "type": "checkbox",
       "id": "separate_section_with_border",
@@ -100,30 +130,50 @@
       "name": "t:sections.tabs.blocks.tab.name",
       "settings": [
         {
-          "type": "inline_richtext",
-          "id": "title",
-          "label": "t:global.text.title",
-          "default": "Tab"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "t:global.text.content",
-          "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
-        },
-        {
-          "type": "page",
-          "id": "page",
-          "label": "t:sections.tabs.blocks.tab.page",
-          "info": "t:sections.tabs.blocks.tab.page_info"
-        },
-        {
-          "type": "checkbox",
-          "id": "open_on_mobile",
-          "label": "t:sections.tabs.blocks.tab.open_on_mobile",
-          "info": "t:sections.tabs.blocks.tab.open_on_mobile_info",
-          "default": false
-        }
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:global.text.title",
+      "default": "Tab"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:global.text.content",
+      "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "page",
+      "id": "page",
+      "label": "t:sections.tabs.blocks.tab.page",
+      "info": "t:sections.tabs.blocks.tab.page_info"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_on_mobile",
+      "label": "t:sections.tabs.blocks.tab.open_on_mobile",
+      "info": "t:sections.tabs.blocks.tab.open_on_mobile_info",
+      "default": false
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:sections.tabs.blocks.tab.collection",
+      "info": "t:sections.tabs.blocks.tab.collection_info"
+    },
+    {
+      "type": "number",
+      "id": "products_count",
+      "label": "t:sections.tabs.blocks.tab.products_count",
+      "default": 4,
+      "min": 1,
+      "max": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_product_information",
+      "label": "t:sections.tabs.blocks.tab.hide_product_information",
+      "default": false
+    }
       ]
     }
   ],
