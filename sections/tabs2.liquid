@@ -20,20 +20,19 @@
             <button class="h6" type="button" role="tab" slot="title" {{ block.shopify_attributes }}>{{ title }}</button>
 
             <div role="tabpanel" slot="content" {% cycle '', 'hidden', 'hidden', 'hidden', 'hidden' %}>
-              <div class="prose">
-                {{- content -}}
-              </div>
-              <div>
-                {%- capture product_list -%}
-                {%- for product in block.settings.collection.products limit: block.settings.products_count -%}
-                  {%- render 'product-card', product: product, reveal: should_reveal, hide_product_information: section.settings.hide_product_information, block: block -%}
-                {%- else -%}
-                  {%- for i in (1..block.settings.products_count) -%}
-                    {%- render 'product-card-placeholder', reveal: should_reveal, loop_index: forloop.index0, hide_product_information: section.settings.hide_product_information -%}
+              {% if block.settings.collection %}
+                <div class="product-list">
+                  {%- for product in block.settings.collection.products limit: block.settings.products_count -%}
+                      {%- render 'product-card', product: product, reveal: true, hide_product_information: section.settings.hide_product_information, block: block -%}
+                    {%- else -%}
+                      <p>No products found in this collection.</p>
                   {%- endfor -%}
-                {%- endfor -%}
-                {%- endcapture -%}
-              </div>
+                </div>
+              {% else %}
+                <div class="prose">
+                  {{- content -}}
+                </div>
+              {% endif %}
             </div>
 
             <div slot="accordion-tab">
@@ -62,117 +61,109 @@
 
 {% schema %}
 {
-  "name": "tabs2",
-  "class": "shopify-section--tabs",
+  {
+  "name": "Collection Tabs",
+  "class": "shopify-section--collection-tabs",
   "max_blocks": 5,
   "disabled_on": {
     "groups": ["header", "custom.overlay"]
   },
   "settings": [
-    
     {
       "type": "checkbox",
       "id": "separate_section_with_border",
-      "label": "t:global.section.separate_section_with_border",
+      "label": "Separate section with border",
       "default": true
     },
     {
       "type": "inline_richtext",
       "id": "subheading",
-      "label": "t:global.text.subheading",
+      "label": "Subheading",
       "default": "Subheading"
     },
     {
       "type": "inline_richtext",
       "id": "title",
-      "label": "t:global.text.heading",
-      "default": "Heading"
+      "label": "Heading",
+      "default": "Collection Tabs"
     },
     {
       "type": "select",
       "id": "text_alignment",
-      "label": "t:global.text.alignment",
+      "label": "Text alignment",
       "options": [
         {
           "value": "start",
-          "label": "t:global.position.left"
+          "label": "Left"
         },
         {
           "value": "center",
-          "label": "t:global.position.center"
+          "label": "Center"
         }
       ],
       "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_product_information",
+      "label": "Hide product information",
+      "default": false
     }
   ],
   "blocks": [
     {
       "type": "tab",
-      "name": "t:sections.tabs.blocks.tab.name",
+      "name": "Collection Tab",
       "settings": [
         {
-      "type": "inline_richtext",
-      "id": "title",
-      "label": "t:global.text.title",
-      "default": "Tab"
-    },
-    {
-      "type": "richtext",
-      "id": "content",
-      "label": "t:global.text.content",
-      "default": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
-    },
-    {
-      "type": "page",
-      "id": "page",
-      "label": "t:sections.tabs.blocks.tab.page",
-      "info": "t:sections.tabs.blocks.tab.page_info"
-    },
-    {
-      "type": "checkbox",
-      "id": "open_on_mobile",
-      "label": "t:sections.tabs.blocks.tab.open_on_mobile",
-      "info": "t:sections.tabs.blocks.tab.open_on_mobile_info",
-      "default": false
-    },
-    {
-      "type": "collection",
-      "id": "collection",
-      "label": "t:sections.tabs.blocks.tab.collection",
-      "info": "t:sections.tabs.blocks.tab.collection_info"
-    },
-    {
-      "type": "checkbox",
-      "id": "hide_product_information",
-      "label": "t:sections.tabs.blocks.tab.hide_product_information",
-      "default": false
-    }
+          "type": "text",
+          "id": "title",
+          "label": "Tab title",
+          "default": "Collection Tab"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "range",
+          "id": "products_count",
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "label": "Number of products to display",
+          "default": 4
+        },
+        {
+          "type": "checkbox",
+          "id": "open_on_mobile",
+          "label": "Open on mobile by default",
+          "default": false
+        }
       ]
     }
   ],
   "presets": [
     {
-      "name": "t:sections.tabs.presets.tab.name",
+      "name": "Collection Tabs",
       "blocks": [
         {
           "type": "tab",
           "settings": {
-            "title": "Tab 1",
-            "content": "<p>Use this text to share information about your brand with your customers.</p>"
+            "title": "Collection 1"
           }
         },
         {
           "type": "tab",
           "settings": {
-            "title": "Tab 2",
-            "content": "<p>Describe a product, share announcements, or welcome customers to your store.</p>"
+            "title": "Collection 2"
           }
         },
         {
           "type": "tab",
           "settings": {
-            "title": "Tab 3",
-            "content": "<p>Share information about your shipping rates, return policy or contact information.</p>"
+            "title": "Collection 3"
           }
         }
       ]
