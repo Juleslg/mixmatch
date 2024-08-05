@@ -13,26 +13,23 @@
         </template>
 
         {%- for block in section.blocks -%}
-          {%- assign title = block.settings.title | default: block.settings.page.title -%}
-          {%- assign content = block.settings.page.content | default: block.settings.content -%}
+          {%- assign title = block.settings.title | default: block.settings.collection.title -%}
 
-          {%- if title != blank and content != blank -%}
+          {%- if title != blank and block.settings.collection != blank -%}
             <button class="h6" type="button" role="tab" slot="title" {{ block.shopify_attributes }}>{{ title }}</button>
 
             <div role="tabpanel" slot="content" {% cycle '', 'hidden', 'hidden', 'hidden', 'hidden' %}>
-              {% if block.settings.collection %}
-                <div class="product-list">
+              <div class="prose">
+                <product-list class="product-list {% if section.settings.hide_product_information %}product-list--compact{% endif %} justify-center">
                   {%- for product in block.settings.collection.products limit: block.settings.products_count -%}
-                      {%- render 'product-card', product: product, reveal: true, hide_product_information: section.settings.hide_product_information, block: block -%}
-                    {%- else -%}
-                      <p>No products found in this collection.</p>
+                    {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, block: block -%}
+                  {%- else -%}
+                    {%- for i in (1..block.settings.products_count) -%}
+                      {%- render 'product-card-placeholder', loop_index: forloop.index0, hide_product_information: section.settings.hide_product_information -%}
+                    {%- endfor -%}
                   {%- endfor -%}
-                </div>
-              {% else %}
-                <div class="prose">
-                  {{- content -}}
-                </div>
-              {% endif %}
+                </product-list>
+              </div>
             </div>
 
             <div slot="accordion-tab">
@@ -46,10 +43,20 @@
 
       <div class="accordion-group sm:hidden">
         {%- for block in section.blocks -%}
-          {%- assign title = block.settings.title | default: block.settings.page.title -%}
-          {%- assign content = block.settings.page.content | default: block.settings.content -%}
+          {%- assign title = block.settings.title | default: block.settings.collection.title -%}
 
-          {%- if title != blank and content != blank -%}
+          {%- if title != blank and block.settings.collection != blank -%}
+            {%- capture content -%}
+              <product-list class="product-list {% if section.settings.hide_product_information %}product-list--compact{% endif %} justify-center">
+                {%- for product in block.settings.collection.products limit: block.settings.products_count -%}
+                  {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, block: block -%}
+                {%- else -%}
+                  {%- for i in (1..block.settings.products_count) -%}
+                    {%- render 'product-card-placeholder', loop_index: forloop.index0, hide_product_information: section.settings.hide_product_information -%}
+                  {%- endfor -%}
+                {%- endfor -%}
+              </product-list>
+            {%- endcapture -%}
             {%- render 'accordion', title: title, content: content, open: block.settings.open_on_mobile -%}
           {%- endif -%}
         {%- endfor -%}
@@ -60,8 +67,7 @@
 {%- endif -%}
 
 {% schema %}
-
-  {
+{
   "name": "Collection Tabs",
   "class": "shopify-section--collection-tabs",
   "max_blocks": 5,
@@ -72,33 +78,33 @@
     {
       "type": "checkbox",
       "id": "separate_section_with_border",
-      "label": "Separate section with border",
+      "label": "t:global.section.separate_section_with_border",
       "default": true
     },
     {
       "type": "inline_richtext",
       "id": "subheading",
-      "label": "Subheading",
+      "label": "t:global.text.subheading",
       "default": "Subheading"
     },
     {
       "type": "inline_richtext",
       "id": "title",
-      "label": "Heading",
+      "label": "t:global.text.heading",
       "default": "Collection Tabs"
     },
     {
       "type": "select",
       "id": "text_alignment",
-      "label": "Text alignment",
+      "label": "t:global.text.alignment",
       "options": [
         {
           "value": "start",
-          "label": "Left"
+          "label": "t:global.position.left"
         },
         {
           "value": "center",
-          "label": "Center"
+          "label": "t:global.position.center"
         }
       ],
       "default": "center"
@@ -112,14 +118,14 @@
   ],
   "blocks": [
     {
-      "type": "tab",
+      "type": "collection_tab",
       "name": "Collection Tab",
       "settings": [
         {
           "type": "text",
           "id": "title",
           "label": "Tab title",
-          "default": "Collection Tab"
+          "default": "Collection"
         },
         {
           "type": "collection",
@@ -129,16 +135,16 @@
         {
           "type": "range",
           "id": "products_count",
-          "min": 1,
+          "min": 2,
           "max": 12,
           "step": 1,
-          "label": "Number of products to display",
-          "default": 4
+          "default": 4,
+          "label": "Products to show"
         },
         {
           "type": "checkbox",
           "id": "open_on_mobile",
-          "label": "Open on mobile by default",
+          "label": "Open on mobile",
           "default": false
         }
       ]
@@ -149,22 +155,13 @@
       "name": "Collection Tabs",
       "blocks": [
         {
-          "type": "tab",
-          "settings": {
-            "title": "Collection 1"
-          }
+          "type": "collection_tab"
         },
         {
-          "type": "tab",
-          "settings": {
-            "title": "Collection 2"
-          }
+          "type": "collection_tab"
         },
         {
-          "type": "tab",
-          "settings": {
-            "title": "Collection 3"
-          }
+          "type": "collection_tab"
         }
       ]
     }
