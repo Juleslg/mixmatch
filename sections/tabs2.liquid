@@ -22,13 +22,14 @@
   #shopify-section-{{ section.id }} {
     --product-list-horizontal-spacing-factor: {{ section.settings.horizontal_spacing_factor | default: 1 }};
     --product-list-vertical-spacing-factor: {{ section.settings.vertical_spacing_factor | default: 1 }};
-
     --collection-items-per-row-medium: 2;
     --collection-items-per-row-large: 1;
   }
 
   #shopify-section-{{ section.id }} .product-list {
-    --product-list-max-items-per-row-allowed: 99 !important;
+    display: grid;
+    grid-template-columns: repeat(var(--collection-items-per-row-{{ products_mobile_grid_mode }}, 1fr));
+    gap: calc(var(--product-list-vertical-spacing-factor) * 20px) calc(var(--product-list-horizontal-spacing-factor) * 20px);
   }
 
   @media screen and (min-width: 700px) {
@@ -40,22 +41,18 @@
   }
 
   @media screen and (min-width: 1000px) {
-    #shopify-section-{{ section.id }} {
-      --collection-items-per-row-compact: 6;
-      --collection-items-per-row-medium: 4;
-      --collection-items-per-row-large: 3;
+    #shopify-section-{{ section.id }} .product-list {
+      grid-template-columns: repeat(var(--collection-items-per-row-{{ products_desktop_grid_mode }}, 1fr));
     }
   }
 </style>
 
-{%- comment -%}Existing tabs2.liquid content starts here{%- endcomment -%}
 {%- if section.blocks.size > 0 -%}
 <div class="section-spacing {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
   <div class="container {% if section.settings.text_alignment == 'center' %}container--xl{% endif %}">
     <div class="section-stack">
       {%- render 'section-header', subheading: section.settings.subheading, heading: section.settings.title, content: section.settings.content, text_alignment: section.settings.text_alignment -%}
 
-      <!-- DESKTOP LAYOUT -->
       <x-tabs class="content-tabs {% if section.settings.text_alignment == 'center' %}content-tabs--center{% endif %} hidden sm:block">
         <template shadowrootmode="open">
           <slot role="tablist" part="tab-list" name="title"></slot>
@@ -70,21 +67,23 @@
 
             <div role="tabpanel" slot="content" {% cycle '', 'hidden', 'hidden', 'hidden', 'hidden' %}>
               <div class="prose">
-                <div>
-                  {%- paginate block.settings.collection.products by block.settings.products_count -%}
-                    <product-list id="product-list-{{ section.id }}-{{ forloop.index }}" class="product-list" collection-mobile-layout="{{ products_mobile_grid_mode }}" collection-desktop-layout="{{ products_desktop_grid_mode }}">
-                      {%- for product in block.settings.collection.products -%}
-                        {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, block: block -%}
-                      {%- else -%}
-                        {%- for i in (1..block.settings.products_count) -%}
+                {%- paginate block.settings.collection.products by block.settings.products_count -%}
+                  <div class="product-list" id="product-list-{{ section.id }}-{{ forloop.index }}">
+                    {%- for product in block.settings.collection.products -%}
+                      <div class="product-item">
+                        {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information -%}
+                      </div>
+                    {%- else -%}
+                      {%- for i in (1..block.settings.products_count) -%}
+                        <div class="product-item">
                           {%- render 'product-card-placeholder', loop_index: forloop.index0, hide_product_information: section.settings.hide_product_information -%}
-                        {%- endfor -%}
+                        </div>
                       {%- endfor -%}
-                    </product-list>
-            
-                    {%- render 'pagination', paginate: paginate, facet: true -%}
-                  {%- endpaginate -%}
-                </div>
+                    {%- endfor -%}
+                  </div>
+          
+                  {%- render 'pagination', paginate: paginate -%}
+                {%- endpaginate -%}
               </div>
             </div>
 
@@ -150,15 +149,6 @@
       "id": "hide_product_information",
       "label": "Hide product information",
       "default": false
-    },
-    {
-      "type": "range",
-      "id": "products_per_page",
-      "label": "Default products per page",
-      "min": 4,
-      "max": 48,
-      "step": 4,
-      "default": 16
     },
     {
       "type": "select",
