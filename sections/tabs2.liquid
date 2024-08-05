@@ -17,7 +17,7 @@
             <button class="h6" type="button" role="tab" slot="title" {{ block.shopify_attributes }}>{{ title }}</button>
 
             <div role="tabpanel" slot="content" {% cycle '', 'hidden', 'hidden', 'hidden', 'hidden' %}>
-              <div class="prose">
+              <div>
                 {%- paginate block.settings.collection.products by block.settings.products_count -%}
                   <div class="product-list" id="product-list-{{ section.id }}-{{ forloop.index }}">
                     {%- for product in block.settings.collection.products -%}
@@ -58,7 +58,7 @@
   display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(4, 1fr);
-      gap: 10px; /* Adjusts spacing between grid items */
+      gap: 10px;
       padding: 10px;
 }
 
