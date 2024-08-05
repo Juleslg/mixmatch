@@ -20,19 +20,22 @@
 
             <div role="tabpanel" slot="content" {% cycle '', 'hidden', 'hidden', 'hidden', 'hidden' %}>
               <div class="prose">
-
-              <div>
-                <product-list class="product-list">
-                  {%- for product in block.settings.collection.products limit: block.settings.products_count -%}
-                    {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, block: block -%}
-                  {%- else -%}
-                    {%- for i in (1..block.settings.products_count) -%}
-                      {%- render 'product-card-placeholder', loop_index: forloop.index0, hide_product_information: section.settings.hide_product_information -%}
-                    {%- endfor -%}
-                  {%- endfor -%}
-                </product-list>
+                <div>
+                  {%- paginate block.settings.collection.products by block.settings.products_count -%}
+                    <product-list id="product-list-{{ section.id }}-{{ forloop.index }}" class="product-list">
+                      {%- for product in block.settings.collection.products -%}
+                        {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, block: block -%}
+                      {%- else -%}
+                        {%- for i in (1..block.settings.products_count) -%}
+                          {%- render 'product-card-placeholder', loop_index: forloop.index0, hide_product_information: section.settings.hide_product_information -%}
+                        {%- endfor -%}
+                      {%- endfor -%}
+                    </product-list>
+            
+                    {%- render 'pagination', paginate: paginate, facet: true -%}
+                  {%- endpaginate -%}
+                </div>
               </div>
-            </div>
             </div>
 
             <div slot="accordion-tab">
@@ -79,104 +82,149 @@
 
 
 {% schema %}
-{
-  "name": "Collection Tabs",
-  "class": "shopify-section--collection-tabs",
-  "max_blocks": 5,
-  "disabled_on": {
-    "groups": ["header", "custom.overlay"]
-  },
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "separate_section_with_border",
-      "label": "t:global.section.separate_section_with_border",
-      "default": true
+  {
+    "name": "Collection Tabs",
+    "class": "shopify-section--collection-tabs",
+    "max_blocks": 5,
+    "disabled_on": {
+      "groups": ["header", "custom.overlay"]
     },
-    {
-      "type": "inline_richtext",
-      "id": "subheading",
-      "label": "t:global.text.subheading",
-      "default": "Subheading"
-    },
-    {
-      "type": "inline_richtext",
-      "id": "title",
-      "label": "t:global.text.heading",
-      "default": "Collection Tabs"
-    },
-    {
-      "type": "select",
-      "id": "text_alignment",
-      "label": "t:global.text.alignment",
-      "options": [
-        {
-          "value": "start",
-          "label": "t:global.position.left"
-        },
-        {
-          "value": "center",
-          "label": "t:global.position.center"
-        }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "checkbox",
-      "id": "hide_product_information",
-      "label": "Hide product information",
-      "default": false
-    }
-  ],
-  "blocks": [
-    {
-      "type": "collection_tab",
-      "name": "Collection Tab",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Tab title",
-          "default": "Collection"
-        },
-        {
-          "type": "collection",
-          "id": "collection",
-          "label": "Collection"
-        },
-        {
-          "type": "range",
-          "id": "products_count",
-          "min": 2,
-          "max": 12,
-          "step": 1,
-          "default": 4,
-          "label": "Products to show"
-        },
-        {
-          "type": "checkbox",
-          "id": "open_on_mobile",
-          "label": "Open on mobile",
-          "default": false
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Collection Tabs",
-      "blocks": [
-        {
-          "type": "collection_tab"
-        },
-        {
-          "type": "collection_tab"
-        },
-        {
-          "type": "collection_tab"
-        }
-      ]
-    }
-  ]
-}
-{% endschema %}
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "separate_section_with_border",
+        "label": "t:global.section.separate_section_with_border",
+        "default": true
+      },
+      {
+        "type": "inline_richtext",
+        "id": "subheading",
+        "label": "t:global.text.subheading",
+        "default": "Subheading"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "title",
+        "label": "t:global.text.heading",
+        "default": "Collection Tabs"
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "t:global.text.alignment",
+        "options": [
+          {
+            "value": "start",
+            "label": "t:global.position.left"
+          },
+          {
+            "value": "center",
+            "label": "t:global.position.center"
+          }
+        ],
+        "default": "center"
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_product_information",
+        "label": "Hide product information",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "label": "Default products per page",
+        "min": 4,
+        "max": 48,
+        "step": 4,
+        "default": 16
+      },
+      {
+        "type": "select",
+        "id": "products_per_row_mobile",
+        "label": "Products per row (mobile)",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          }
+        ],
+        "default": "2"
+      },
+      {
+        "type": "select",
+        "id": "products_size_desktop",
+        "label": "Product size (desktop)",
+        "options": [
+          {
+            "value": "compact",
+            "label": "Compact"
+          },
+          {
+            "value": "medium",
+            "label": "Medium"
+          },
+          {
+            "value": "large",
+            "label": "Large"
+          }
+        ],
+        "default": "medium"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection_tab",
+        "name": "Collection Tab",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Tab title",
+            "default": "Collection"
+          },
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "range",
+            "id": "products_count",
+            "min": 4,
+            "max": 48,
+            "step": 4,
+            "default": 16,
+            "label": "Products to show per page"
+          },
+          {
+            "type": "checkbox",
+            "id": "open_on_mobile",
+            "label": "Open on mobile",
+            "default": false
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection Tabs",
+        "blocks": [
+          {
+            "type": "collection_tab"
+          },
+          {
+            "type": "collection_tab"
+          },
+          {
+            "type": "collection_tab"
+          }
+        ]
+      }
+    ]
+  }
+  {% endschema %}
