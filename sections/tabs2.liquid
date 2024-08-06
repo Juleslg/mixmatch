@@ -66,15 +66,24 @@
 
 <style>
 
+.maincontainer {
+  display: grid;
+  grid-template-columns: 2fr 1fr; 
+  gap: 20px; 
+  padding: 20px; 
+  overflow: visible;
+  height: 100%;
+  align-items: start; /* Ensure sticky behavior works */
+}
+
 .sidecart {
-  
   display: block;
   position: sticky;
   top: 20px; 
   max-height: calc(100vh - 40px);
   overflow-y: auto;
-
 }
+
 
 .sidecart .h6 {
   text-align: center;
@@ -102,14 +111,7 @@
   width: unset;
 }
 
-.maincontainer {
-  display: grid;
-  grid-template-columns: 2fr 1fr; 
-  gap: 20px; 
-  padding: 20px; 
-  overflow: visible;
-  height: 100%;
-}
+
 
 
 @media screen and (max-width: 768px) {
