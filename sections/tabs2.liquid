@@ -19,10 +19,10 @@
             <div role="tabpanel" slot="content" {% cycle '', 'hidden', 'hidden', 'hidden', 'hidden' %}>
               <div>
                 {%- paginate block.settings.collection.products by block.settings.products_count -%}
-                  <div class="product-list" id="product-list-{{ section.id }}-{{ forloop.index }}">
+                  <product-list id="product-list-{{ section.id }}-{{ forloop.index }}" class="product-list">
                     {%- for product in block.settings.collection.products -%}
                       <div class="product-item">
-                        {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information -%}
+                        {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, reveal: settings.stagger_products_apparition, stacked: true -%}
                       </div>
                     {%- else -%}
                       {%- for i in (1..block.settings.products_count) -%}
@@ -31,9 +31,9 @@
                         </div>
                       {%- endfor -%}
                     {%- endfor -%}
-                  </div>
-          
-                  {%- render 'pagination', paginate: paginate -%}
+                  </product-list>
+            
+                  {%- render 'pagination', paginate: paginate, facet: true -%}
                 {%- endpaginate -%}
               </div>
             </div>
