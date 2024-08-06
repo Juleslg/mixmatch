@@ -4,7 +4,7 @@
     <div class="section-stack">
       {%- render 'section-header', subheading: section.settings.subheading, heading: section.settings.title, content: section.settings.content, text_alignment: section.settings.text_alignment -%}
 
-      <x-tabs class="content-tabs {% if section.settings.text_alignment == 'center' %}content-tabs--center{% endif %} hidden sm:block">
+      <x-tabs class="content-tabs {% if section.settings.text_alignment == 'center' %}content-tabs--center{% endif %} sm:block">
         <template shadowrootmode="open">
           <slot role="tablist" part="tab-list" name="title"></slot>
           <slot part="tab-panel-list" name="content"></slot>
