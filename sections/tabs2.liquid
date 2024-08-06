@@ -17,27 +17,26 @@
             <button class="h6" type="button" role="tab" slot="title" {{ block.shopify_attributes }}>{{ title }}</button>
 
             <div role="tabpanel" slot="content" {% cycle '', 'hidden', 'hidden', 'hidden', 'hidden' %}>
-              
-  <div>
-    {%- paginate block.settings.collection.products by block.settings.products_count -%}
-      <div class="product-list" id="product-list-{{ section.id }}-{{ forloop.index }}">
-        {%- for product in paginate.products -%}
-          <div class="product-item">
-            {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information -%}
-          </div>
-        {%- else -%}
-          {%- for i in (1..block.settings.products_count) -%}
-            <div class="product-item">
-              {%- render 'product-card-placeholder', loop_index: forloop.index0, hide_product_information: section.settings.hide_product_information -%}
+              <div>
+                {%- paginate block.settings.collection.products by block.settings.products_count -%}
+                  <div class="product-list" id="product-list-{{ section.id }}-{{ forloop.index }}">
+                    {%- for product in block.settings.collection.products -%}
+                      <div class="product-item">
+                        {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information -%}
+                      </div>
+                    {%- else -%}
+                      {%- for i in (1..block.settings.products_count) -%}
+                        <div class="product-item">
+                          {%- render 'product-card-placeholder', loop_index: forloop.index0, hide_product_information: section.settings.hide_product_information -%}
+                        </div>
+                      {%- endfor -%}
+                    {%- endfor -%}
+                  </div>
+          
+                  {%- render 'pagination', paginate: paginate -%}
+                {%- endpaginate -%}
+              </div>
             </div>
-          {%- endfor -%}
-        {%- endfor -%}
-      </div>
-
-      {%- render 'pagination', paginate: paginate -%}
-    {%- endpaginate -%}
-  </div>
-</div>
 
             <div slot="accordion-tab">
               {%- render 'accordion', title: title, content: content, open: block.settings.open_on_mobile -%}
