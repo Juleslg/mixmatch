@@ -23,6 +23,18 @@
                     {%- for product in block.settings.collection.products -%}
                       <div class="product-item">
                         {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, reveal: settings.stagger_products_apparition, stacked: true -%}
+                        <div class="buy-buttonC">
+              {%- render 'buy-buttons',
+              product: product,
+              form_id: product_form_id,
+              show_payment_button: block.settings.show_payment_button,
+              show_gift_card_recipient: block.settings.show_gift_card_recipient,
+              atc_button_background: block.settings.atc_button_background,
+              atc_button_text_color: block.settings.atc_button_text_color,
+              payment_button_background: block.settings.payment_button_background,
+              payment_button_text_color: block.settings.payment_button_text_color
+              -%}
+            </div>
                       </div>
                     {%- else -%}
                       {%- for i in (1..block.settings.products_count) -%}
@@ -65,7 +77,7 @@
 </div>
 {%- endif -%}
 
-<style>
+<style> 
 
 .price-list {
   display: none;
