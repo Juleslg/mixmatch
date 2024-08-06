@@ -3,7 +3,7 @@
   <div class="container {% if section.settings.text_alignment == 'center' %}container--xl{% endif %}">
     <div class="section-stack">
       {%- render 'section-header', subheading: section.settings.subheading, heading: section.settings.title, content: section.settings.content, text_alignment: section.settings.text_alignment -%}
-<div>
+<div class="maincontainer">
       <x-tabs class="content-tabs {% if section.settings.text_alignment == 'center' %}content-tabs--center{% endif %} sm:block">
         <template shadowrootmode="open">
           <slot role="tablist" part="tab-list" name="title"></slot>
@@ -73,6 +73,13 @@
 .content-tabs--center::part(tab-panel-list)
 {
   width: unset;
+}
+
+.maincontainer {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Two-thirds / One-third layout */
+  gap: 20px; /* Adjust the gap between columns as needed */
+  padding: 20px; /* Optional: padding around the container */
 }
 
 </style>
