@@ -22,7 +22,7 @@
                   <product-list id="product-list-{{ section.id }}-{{ forloop.index }}" class="product-list">
                     {%- for product in block.settings.collection.products -%}
                       <div class="product-item">
-                        {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, reveal: settings.stagger_products_apparition, stacked: true -%}
+                        {%- render 'product-info', product: product, reveal: settings.stagger_products_apparition, stacked: true -%}
                       </div>
                     {%- else -%}
                       {%- for i in (1..block.settings.products_count) -%}
