@@ -47,10 +47,10 @@
 
 
 <div class="sidecart">
-  <div class="sticky">
+  
     <div class="h6">Your selection</div>
     <div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae maiores provident non, molestiae quibusdam ex consequuntur ab? Quidem, natus, veritatis eius quam inventore commodi, incidunt maiores placeat vero alias minima.</div>
-  </div>
+  
 </div>
 
 
@@ -77,15 +77,14 @@
   align-items: start; /* Ensure sticky behavior works */
 }
 
+
 .sidecart {
+    align-self: start;
+    position: sticky;
+    top: 6.5rem;
   
 } 
 
-.sticky {
-  align-self: start;
-  position: sticky;
-  top: 0px; 
-}
 
 .sidecart .h6 {
   text-align: center;
