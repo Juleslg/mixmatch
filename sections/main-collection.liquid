@@ -43,6 +43,8 @@ CSS
 {%- endcomment -%}
 
 <style>
+
+
   #shopify-section-{{ section.id }} {
     --product-list-horizontal-spacing-factor: {{ section.settings.horizontal_spacing_factor }};
     --product-list-vertical-spacing-factor: {{ section.settings.vertical_spacing_factor }};
@@ -97,8 +99,49 @@ CSS
         --collection-items-per-row-large: 3;
       {%- endif -%}
     }
+
   }
-</style>
+
+  .button-container {
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+  .button-container a {
+    
+  
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    border: 1px solid #000;
+    padding: 8px 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    font-size: 16px; 
+    display: flex;  
+    align-items: center;
+    justify-content: center;
+   
+  }
+
+  .arrow-link {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+  .arrow-link a {
+    font-size: 24px;
+    padding: 5px 15px;
+    border-radius: 50%;
+  }
+  .arrow-link a:hover {
+    background-color: {{ settings.arrow_hover_background_color }};
+  }
+</style> 
 
 {%- comment -%}
 ------------------------------------------------------------------------------------------------------------------------
@@ -107,7 +150,26 @@ LIQUID
 {%- endcomment -%}
 
 <div class="container">
+  
   <div class="v-stack gap-6 sm:gap-12">
+
+  {% if section.blocks.size > 0 %}
+  <div class="button-container">
+  {% for block in section.blocks %}
+    {% if block.type == 'arrow' %}
+      <div class="arrow-link">
+        <a href="{{ block.settings.link }}" style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }}; border: 1px solid #000; padding: 10px 20px; transition: background-color 0.3s ease, color 0.3s ease;" onmouseover="this.style.backgroundColor='{{ block.settings.hover_background_color }}'; this.style.color='{{ block.settings.hover_text_color }}'" onmouseout="this.style.backgroundColor='{{ block.settings.background_color }}'; this.style.color='{{ block.settings.text_color }}'">
+            {{ block.settings.text }}
+        </a>
+      </div>
+    {% elsif block.type == 'button' %}
+      <a href="{{ block.settings.link }}" style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }}; transition: background-color 0.3s ease, color 0.3s ease;" onmouseover="this.style.backgroundColor='{{ block.settings.hover_background_color }}'; this.style.color='{{ block.settings.hover_text_color }}'" onmouseout="this.style.backgroundColor='{{ block.settings.background_color }}'; this.style.color='{{ block.settings.text_color }}'">
+            {{ block.settings.text }}
+          </a>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+</div>
     {%- if collection.all_products_count == 0 -%}
       <div class="empty-state">
         <div class="prose">
@@ -121,12 +183,14 @@ LIQUID
     {%- else -%}
       {%- if show_filters or section.settings.show_sort_by or section.settings.show_grid_mode_selector or section.settings.show_results_count -%}
         <height-observer variable="collection-toolbar" class="collection-toolbar full-bleed">
+          
           <div class="collection-toolbar__button-list">
             {%- if show_filters -%}
-              <div class="collection-toolbar__button-container {% if section.settings.filter_layout == 'sidebar' %}md:hidden{% endif %}">
-                <button type="button" aria-controls="facets-drawer" class="collection-toolbar__button heading text-xxs w-full">
+              <div style="border-left-width: 0px;" class="collection-toolbar__button-container {% if section.settings.filter_layout == 'sidebar' %}md:hidden{% endif %}">
+                <button type="button" aria-controls="facets-drawer" class="collection-toolbar__button heading text-s w-full">
                   {{- 'collection.faceting.filter_button' | t }} {% if active_values_count > 0 %}({{ active_values_count }}){% endif -%}
                 </button>
+                
               </div>
             {%- endif -%}
 
@@ -158,6 +222,8 @@ LIQUID
             {%- endif -%}
           </div>
 
+          {%- render 'active-facets', results: collection -%}
+
           {%- if section.settings.show_results_count -%}
             <p class="collection-toolbar__products-count h6 text-subdued md-max:hidden">
               {{ 'collection.products_count' | t: count: collection.products_count }}
@@ -182,7 +248,7 @@ LIQUID
       <div class="collection">
         {%- paginate collection.products by section.settings.products_per_page -%}
           {%- if show_filters -%}
-            <facets-drawer id="facets-drawer" class="facets-drawer drawer drawer--sm {% if section.settings.filter_layout == 'sidebar' %}md:hidden{% endif %}">
+            <facets-drawer id="facets-drawer" class="facets-drawer drawer drawer--m {% if section.settings.filter_layout == 'sidebar' %}md:hidden{% endif %}">
               <p class="h4" slot="header">{{ 'collection.faceting.filters' | t }}</p>
 
               {%- render 'facets', results: collection, show_filters: section.settings.show_filters, open_filters_by_default: section.settings.open_filters_by_default, update_on_change: false, quick_links_menu: section.settings.quick_links_menu, context: 'drawer' -%}
@@ -192,7 +258,7 @@ LIQUID
                 {%- render 'button', type: 'button', content: button_content, stretch: true, is: 'dialog-close-button' -%}
               </div>
             </facets-drawer>
-
+          
             {%- if section.settings.filter_layout == 'sidebar' -%}
               <safe-sticky class="facets-sidebar md-max:hidden">
                 {%- render 'facets', results: collection, show_filters: section.settings.show_filters, open_filters_by_default: section.settings.open_filters_by_default, update_on_change: true, quick_links_menu: section.settings.quick_links_menu, context: 'sidebar' -%}
@@ -212,14 +278,15 @@ LIQUID
           {%- else -%}
             <div class="collection__main">
 
-              {%- render 'active-facets', results: collection -%}
+              
 
               <product-list id="product-list-{{ section.id }}" class="product-list" collection-mobile-layout="{{ products_mobile_grid_mode }}" collection-desktop-layout="{{ products_desktop_grid_mode }}">
                 {%- for product in collection.products -%}
-                  {%- render 'product-card', product: product, reveal: settings.stagger_products_apparition, hide_product_information: section.settings.hide_product_information, stacked: true -%}
-
-                  
-
+                  {%- if section.settings.variant_collection -%}
+                    {%- render 'color-variant', product: product, reveal: settings.stagger_products_apparition, hide_product_information: section.settings.hide_product_information, stacked: true -%}
+                  {%- else -%}
+                    {%- render 'product-card', product: product, reveal: settings.stagger_products_apparition, hide_product_information: section.settings.hide_product_information, stacked: true -%}
+                  {%- endif -%}
                 {%- endfor -%}
               </product-list>
 
@@ -232,180 +299,284 @@ LIQUID
   </div>
 </div>
 
+<style>
+  /* ... other styles ... */
+
+  {%- if section.settings.variant_collection -%}
+    .justify-items-center {
+      justify-items: baseline;
+    }
+
+    @media screen and (min-width: 700px) {
+    .sm\:gap-12 {
+        gap: 1.5rem;
+    }
+  }
+  {%- else -%}
+    .justify-items-center {
+      justify-items: safe center;
+    }
+  {%- endif -%}
+</style>
+
+
+
 {% schema %}
-{
-  "name": "t:sections.main_collection.name",
-  "class": "shopify-section--main-collection",
-  "tag": "section",
-  "settings": [
+  {
+    "name": "t:sections.main_collection.name",
+    "class": "shopify-section--main-collection",
+    "tag": "section",
+    "settings": [
+
     {
       "type": "checkbox",
       "id": "variant_collection",
       "label": "Variant Collection",
-      "info": "ONLY Select if you want to show a spercific color variant"
+      "info": "Select if you want to show color variants instead of product cards"
+    },
+      {
+        "type": "checkbox",
+        "id": "hide_product_information",
+        "label": "t:global.product_list.hide_product_information",
+        "info": "t:global.product_list.hide_product_information_collection_info"
       },
       {
-      "type": "checkbox",
-      "id": "hide_product_information",
-      "label": "t:global.product_list.hide_product_information",
-      "info": "t:global.product_list.hide_product_information_collection_info"
-    },
-    {
-      "type": "header",
-      "content": "t:global.product_list.product_list_category"
-    },
-    {
-      "type": "range",
-      "id": "products_per_page",
-      "label": "t:global.faceting.products_per_page",
-      "min": 8,
-      "max": 50,
-      "step": 1,
-      "default": 48
-    },
-    {
-      "type": "select",
-      "id": "products_per_row_mobile",
-      "label": "t:global.product_list.products_per_row_mobile",
-      "options": [
-        {
-          "value": "1",
-          "label": "1"
-        },
-        {
-          "value": "2",
-          "label": "2"
-        }
-      ],
-      "default": "2"
-    },
-    {
-      "type": "select",
-      "id": "products_size_desktop",
-      "label": "t:global.product_list.products_size_desktop",
-      "info": "t:global.product_list.products_size_desktop_info",
-      "options": [
-        {
-          "value": "compact",
-          "label": "t:global.product_list.products_size_desktop_options.compact"
-        },
-        {
-          "value": "medium",
-          "label": "t:global.product_list.products_size_desktop_options.medium"
-        },
-        {
-          "value": "large",
-          "label": "t:global.product_list.products_size_desktop_options.large"
-        }
-      ],
-      "default": "medium"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_grid_mode_selector",
-      "label": "t:global.product_list.show_grid_mode_selector",
-      "info": "t:global.product_list.show_grid_mode_selector_info",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "t:global.product_list.spacing_category",
-      "info": "t:global.product_list.spacing_category_info"
-    },
-    {
-      "type": "range",
-      "min": 0.2,
-      "max": 2,
-      "step": 0.1,
-      "id": "horizontal_spacing_factor",
-      "label": "t:global.product_list.horizontal_spacing_factor",
-      "default": 1
-    },
-    {
-      "type": "range",
-      "min": 0.2,
-      "max": 2,
-      "step": 0.1,
-      "id": "vertical_spacing_factor",
-      "label": "t:global.product_list.vertical_spacing_factor",
-      "default": 1
-    },
-    {
-      "type": "header",
-      "content": "t:global.faceting.filters_and_sorting_category"
-    },
-    {
-      "type": "select",
-      "id": "filter_layout",
-      "label": "t:global.faceting.desktop_layout",
-      "options": [
-        {
-          "value": "sidebar",
-          "label": "t:global.faceting.desktop_layout_options.sidebar"
-        },
-        {
-          "value": "drawer",
-          "label": "t:global.faceting.desktop_layout_options.drawer"
-        }
-      ],
-      "default": "sidebar"
-    },
-    {
-      "type": "link_list",
-      "id": "quick_links_menu",
-      "label": "t:sections.main_collection.quick_links_menu",
-      "info": "t:sections.main_collection.quick_links_menu_info"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_sort_by",
-      "label": "t:global.faceting.show_sort_by",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_filters",
-      "label": "t:global.faceting.show_filters",
-      "info": "t:global.faceting.show_filters_info",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_results_count",
-      "label": "t:global.faceting.show_results_count",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_filter_group_name",
-      "label": "t:global.faceting.show_group_name",
-      "info": "t:global.faceting.show_group_name_info",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "show_empty_filter_values",
-      "label": "t:global.faceting.show_empty_filter_values",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "show_filter_values_count",
-      "label": "t:global.faceting.show_filter_values_count",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_color_swatch",
-      "label": "t:global.faceting.show_filter_color_swatch",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "open_filters_by_default",
-      "label": "t:global.faceting.open_filters_by_default",
-      "default": false
-    }
-  ]
-}
+        "type": "header",
+        "content": "t:global.product_list.product_list_category"
+      },
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "label": "t:global.faceting.products_per_page",
+        "min": 8,
+        "max": 50,
+        "step": 1,
+        "default": 48
+      },
+      {
+        "type": "select",
+        "id": "products_per_row_mobile",
+        "label": "t:global.product_list.products_per_row_mobile",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          }
+        ],
+        "default": "2"
+      },
+      {
+        "type": "select",
+        "id": "products_size_desktop",
+        "label": "t:global.product_list.products_size_desktop",
+        "info": "t:global.product_list.products_size_desktop_info",
+        "options": [
+          {
+            "value": "compact",
+            "label": "t:global.product_list.products_size_desktop_options.compact"
+          },
+          {
+            "value": "medium",
+            "label": "t:global.product_list.products_size_desktop_options.medium"
+          },
+          {
+            "value": "large",
+            "label": "t:global.product_list.products_size_desktop_options.large"
+          }
+        ],
+        "default": "medium"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_grid_mode_selector",
+        "label": "t:global.product_list.show_grid_mode_selector",
+        "info": "t:global.product_list.show_grid_mode_selector_info",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "t:global.product_list.spacing_category",
+        "info": "t:global.product_list.spacing_category_info"
+      },
+      {
+        "type": "range",
+        "min": 0.2,
+        "max": 2,
+        "step": 0.1,
+        "id": "horizontal_spacing_factor",
+        "label": "t:global.product_list.horizontal_spacing_factor",
+        "default": 1
+      },
+      {
+        "type": "range",
+        "min": 0.2,
+        "max": 2,
+        "step": 0.1,
+        "id": "vertical_spacing_factor",
+        "label": "t:global.product_list.vertical_spacing_factor",
+        "default": 1
+      },
+      {
+        "type": "header",
+        "content": "t:global.faceting.filters_and_sorting_category"
+      },
+      {
+        "type": "select",
+        "id": "filter_layout",
+        "label": "t:global.faceting.desktop_layout",
+        "options": [
+          {
+            "value": "sidebar",
+            "label": "t:global.faceting.desktop_layout_options.sidebar"
+          },
+          {
+            "value": "drawer",
+            "label": "t:global.faceting.desktop_layout_options.drawer"
+          }
+        ],
+        "default": "sidebar"
+      },
+      {
+        "type": "link_list",
+        "id": "quick_links_menu",
+        "label": "t:sections.main_collection.quick_links_menu",
+        "info": "t:sections.main_collection.quick_links_menu_info"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sort_by",
+        "label": "t:global.faceting.show_sort_by",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_filters",
+        "label": "t:global.faceting.show_filters",
+        "info": "t:global.faceting.show_filters_info",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_results_count",
+        "label": "t:global.faceting.show_results_count",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_filter_group_name",
+        "label": "t:global.faceting.show_group_name",
+        "info": "t:global.faceting.show_group_name_info",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_empty_filter_values",
+        "label": "t:global.faceting.show_empty_filter_values",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_filter_values_count",
+        "label": "t:global.faceting.show_filter_values_count",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_color_swatch",
+        "label": "t:global.faceting.show_filter_color_swatch",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "open_filters_by_default",
+        "label": "t:global.faceting.open_filters_by_default",
+        "default": false
+      }
+    ],
+    "blocks": [
+      {
+        "type": "button",
+        "name": "Button",
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "label": "Button Text"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Button Link"
+          },
+          {
+            "type": "color",
+            "id": "background_color",
+            "label": "Button Background Color"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Button Text Color"
+          },
+          {
+            "type": "color",
+            "id": "hover_background_color",
+            "label": "Button Hover Background Color"
+          },
+          {
+            "type": "color",
+            "id": "hover_text_color",
+            "label": "Button Hover Text Color" 
+          }
+        ]
+      },
+      {
+        "type": "arrow",
+        "name": "Arrow",
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "label": "Arrow Text",
+            "default": "<"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Arrow Link"
+          },
+          {
+            "type": "color",
+            "id": "background_color",
+            "label": "Arrow Background Color"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Arrow Text Color"
+          },
+          {
+            "type": "color",
+            "id": "hover_background_color",
+            "label": "Arrow Hover Background Color"
+          },
+          {
+            "type": "color",
+            "id": "hover_text_color",
+            "label": "Arrow Hover Text Color"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Default",
+        "category": "Collection pages"
+      }
+    ]
+  }
 {% endschema %}
