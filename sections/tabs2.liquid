@@ -3,6 +3,7 @@
   <div class="container {% if section.settings.text_alignment == 'center' %}container--xl{% endif %}">
     <div class="section-stack">
       {%- render 'section-header', subheading: section.settings.subheading, heading: section.settings.title, content: section.settings.content, text_alignment: section.settings.text_alignment -%}
+      <div class="collection-description">Lorem, ispum ipsum dolor sit amet consectetur adipisicing elit. Dolor, in maxime nisi impedit quos recusandae, laboriosam temporibus tempore saepe porro nostrum? Nihil, consequatur. Saepe ut excepturi odio eius architecto pariatur!</div>
 <div class="maincontainer">
       <x-tabs class="content-tabs {% if section.settings.text_alignment == 'center' %}content-tabs--center{% endif %} sm:block">
         <template shadowrootmode="open">
@@ -21,9 +22,9 @@
                 
                   <product-list id="product-list-{{ section.id }}-{{ forloop.index }}" class="product-list">
                     {%- for product in block.settings.collection.products -%}
-                      <div class="product-item">
-                        {%- render 'product-card', product: product, hide_product_information: section.settings.hide_product_information, reveal: settings.stagger_products_apparition, stacked: true -%}
-                      </div>
+                      
+                        {%- render 'color-variant', product: product, reveal: settings.stagger_products_apparition, hide_product_information: section.settings.hide_product_information, stacked: true -%}
+                      
                     {%- else -%}
                       {%- for i in (1..block.settings.products_count) -%}
                         <div class="product-item">
@@ -46,12 +47,17 @@
       </x-tabs>
 
 
-<div class="sidecart">
-  
-    <div class="h6">Your selection</div>
-    <div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repudiandae maiores provident non, molestiae quibusdam ex consequuntur ab? Quidem, natus, veritatis eius quam inventore commodi, incidunt maiores placeat vero alias minima.</div>
-  
-</div>
+    <div class="sidecart">
+        <div class="h6">Your selection</div>
+            <div class="sidecart-items-container">
+                <div id="sidecart-items"></div>
+            </div>
+            <form method="post" action="/cart/add" id="sidecart-form">
+                <!-- Hidden inputs will be dynamically added here -->
+            <button type="submit" class="button button--primary" id="add-to-cart-button">Add to Cart</button>
+            </form>
+            <button id="add-to-cart-button-2" class="button button--primary">Add to Cart Second</button>
+    </div>
 
 
       </div>
@@ -66,6 +72,81 @@
 {%- endif -%}
 
 <style> 
+
+.collection-description {
+  text-align: center;
+  text-justify: inter-word;
+  font-size: 1.5rem;
+}
+
+.delete-all-container {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  #delete-all-link {
+    color: rgb(var(--text-color));
+    text-decoration: underline;
+    font-size: 0.9em;
+    cursor: pointer;
+  }
+
+  #delete-all-link:hover {
+    opacity: 0.8;
+  }
+
+#add-to-cart-button {
+    width: 100%;
+}
+
+.sidecart-item-variant {
+    text-transform: uppercase;
+    letter-spacing: var(--heading-letter-spacing);
+    font-size: .625rem;
+}
+
+.sidecart-list {
+    padding-top: 1.8rem;
+
+}
+
+.add-to-sidecart {
+
+  background: rgb(var(--background-secondary));
+  color: rgb(var(--text-color));
+  z-index: 1;
+  padding: .625rem;
+  font-size: 1.25rem;
+  position: absolute;
+  inset-block-start: .5rem;
+  inset-inline-end: .5rem;
+}
+
+@media screen and (pointer: fine) {
+    .add-to-sidecart {
+    opacity: 0;
+    transition: opacity .2s ease-in-out, transform .2s ease-in-out;
+    transform: translateY(5px);
+  }
+
+  .add-to-sidecart :is(svg) {
+    transition: transform .2s ease-in-out;
+  }
+
+  .add-to-sidecart:hover svg {
+    transform: rotateZ(90deg);
+  }
+
+  .product-card:hover .add-to-sidecart {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sidecart-text {
+  padding: 1.5rem;
+}
 
 .price-list {
   display: none;
@@ -95,16 +176,141 @@ padding-bottom: 1rem ;
 .sidecart {
     align-self: start;
     position: sticky;
-    top: 6.5rem;
-  
-} 
+    top: 7.9rem; /* Adjust this value based on your header height */
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 8.9rem); /* Adjust based on your layout */
+  }
+
+  @media screen and (max-width: 768px) {
+  .maincontainer {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding-bottom: 60px; /* Add space for the sticky button */
+  }
+
+  .sidecart-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+  }
+
+  .sidecart-overlay.active {
+    display: block;
+  }
+
+  .sidecart {
+    z-index: 101; /* Ensure the sidecart is above the overlay */
+  }
+
+  .sidecart {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    right: 0;
+    top: auto;
+    z-index: 100;
+    background-color: white;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    max-height: 80vh;
+    overflow-y: auto;
+    transition: bottom 0.3s ease-in-out;
+  }
+
+  .sidecart.active {
+    bottom: 0;
+  }
 
 
-.sidecart .h6 {
-  text-align: center;
-  padding-bottom: 10px; 
-  border-bottom: 1px solid rgb(95, 95, 95);
+  .sidecart-items-container {
+    max-height: calc(80vh - 120px);
+    overflow-y: auto;
+  }
+
+  #add-to-cart-button {
+    position: sticky;
+    bottom: 0;
+    background-color: rgb(var(--background-color));
+    padding-top: 10px;
+  }
+
+  .mobile-sidecart-toggle {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    color: rgb(var(--text-color));
+    text-align: center;
+    padding: 1rem;
+    font-weight: bold;
+    z-index: 99;
+    cursor: pointer;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    backdrop-filter: none;
+    font: var(--button-font);
+    letter-spacing: var(--button-letter-spacing);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .sidecart-count {
+    margin-left: 5px;
+    font-weight: normal;
+  }
+
+  .sidecart .h6 {
+    cursor: pointer;
+    position: relative;
+    padding-right: 30px; /* Make room for the close icon */
+  }
+
+  .sidecart .h6::after {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5em;
+  }
 }
+
+  .sidecart .h6 {
+    text-align: center;
+    padding: 1rem;
+    padding-top: 0.5rem;
+    border-bottom: 1px solid rgb(95, 95, 95);
+  }
+
+  .sidecart-items-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+  }
+
+  .sidecart-items-container::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sidecart-items-container::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--text-color-rgb), 0.3);
+    border-radius: 3px;
+  }
+
+  .sidecart-items-container::-webkit-scrollbar-track {
+    background-color: rgba(var(--text-color-rgb), 0.1);
+  }
+
+  #sidecart-form {
+    margin-top: auto;
+  }
 
 .product-list {
   display: grid;
@@ -136,7 +342,326 @@ padding-bottom: 1rem ;
   }
 }
 
+.sidecart-list {
+    list-style-type: none;
+    margin: 0;
+  }
+
+  .sidecart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(var(--text-color-rgb), 0.1);
+}
+
+.sidecart-item-info {
+  flex-grow: 1;
+}
+
+
+.sidecart-item-title {
+  font-weight: bold;
+}
+
+.sidecart-item-variant {
+  font-size: 0.9em;
+  color: rgba(var(--text-color-rgb), 0.8);
+}
+
+.sidecart-item-quantity {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.quantity-button {
+  background: none;
+  border: 1px solid rgba(var(--text-color-rgb), 0.3);
+  color: rgb(var(--text-color));
+  cursor: pointer;
+  font-size: 1em;
+  padding: 0 5px;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-input {
+  width: 30px;
+  text-align: center;
+  border: none;
+  font-size: 0.9em;
+  margin: 0 5px;
+}
+
+.sidecart-item-remove {
+  background: none;
+  border: none;
+  color: rgb(var(--accent-color));
+  cursor: pointer;
+  font-size: 2.2em;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidecart-item-remove:hover {
+  color: rgb(var(--accent-color-darker));
+}
+
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const addToSidecartButtons = document.querySelectorAll('.add-to-sidecart');
+  const sidecartItems = document.getElementById('sidecart-items');
+  const sidecartForm = document.getElementById('sidecart-form');
+  const addToCartButton2 = document.getElementById('add-to-cart-button-2');
+  let selectedProducts = {};
+
+  const sidecart = document.querySelector('.sidecart');
+  const mobileToggle = document.createElement('div');
+  mobileToggle.className = 'mobile-sidecart-toggle';
+  mobileToggle.innerHTML = 'Your Selection <span class="sidecart-count">(0)</span>';
+  document.body.appendChild(mobileToggle);
+
+  const sidecartHeader = sidecart.querySelector('.h6');
+
+  // Create overlay element
+  const overlay = document.createElement('div');
+  overlay.className = 'sidecart-overlay';
+  document.body.appendChild(overlay);
+
+  mobileToggle.addEventListener('click', function() {
+    sidecart.classList.add('active');
+    overlay.classList.add('active');
+  });
+
+  overlay.addEventListener('click', function(event) {
+    if (event.target === overlay) {
+      sidecart.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+  });
+
+  function updateSidecart() {
+    let sidecartContent = '';
+    if (Object.keys(selectedProducts).length === 0) {
+      sidecartContent = '<div class="sidecart-text">No items selected</div>';
+    } else {
+      sidecartContent = '<ul class="sidecart-list">';
+      for (const [key, product] of Object.entries(selectedProducts)) {
+        sidecartContent += `
+          <li class="sidecart-item" data-product-key="${key}">
+            <div class="sidecart-item-info">
+              <div class="sidecart-item-title">${product.title}</div>
+              <div class="sidecart-item-variant">${product.variantTitle}</div>
+            </div>
+            <div class="sidecart-item-quantity">
+              <button type="button" class="quantity-button decrease" data-product-key="${key}">-</button>
+              <input type="number" class="quantity-input" value="${product.quantity}" min="1" data-product-key="${key}">
+              <button type="button" class="quantity-button increase" data-product-key="${key}">+</button>
+            </div>
+            <button type="button" class="sidecart-item-remove" data-product-key="${key}">×</button>
+          </li>
+        `;
+      }
+      sidecartContent += '</ul>';
+      
+      // Add "Delete All" text link
+      sidecartContent += '<div class="delete-all-container"><a href="#" id="delete-all-link">Delete all</a></div>';
+    }
+    sidecartItems.innerHTML = sidecartContent;
+
+    // Update form inputs
+    sidecartForm.innerHTML = ''; // Clear existing inputs
+    for (const product of Object.values(selectedProducts)) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'items[][id]';
+      input.value = product.variantId;
+      sidecartForm.appendChild(input);
+
+      const quantityInput = document.createElement('input');
+      quantityInput.type = 'hidden';
+      quantityInput.name = 'items[][quantity]';
+      quantityInput.value = product.quantity;
+      sidecartForm.appendChild(quantityInput);
+    }
+
+    // Re-append the submit button
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.className = 'button button--primary';
+    submitButton.id = 'add-to-cart-button';
+    submitButton.textContent = 'Add to Cart';
+    sidecartForm.appendChild(submitButton);
+
+    // Add event listeners for quantity buttons and remove buttons
+    document.querySelectorAll('.quantity-button').forEach(button => {
+      button.addEventListener('click', updateQuantity);
+    });
+    document.querySelectorAll('.quantity-input').forEach(input => {
+      input.addEventListener('change', updateQuantityFromInput);
+    });
+    document.querySelectorAll('.sidecart-item-remove').forEach(button => {
+      button.addEventListener('click', removeFromSidecart);
+    });
+
+    // Add event listener for "Delete All" link
+    const deleteAllLink = document.getElementById('delete-all-link');
+    if (deleteAllLink) {
+      deleteAllLink.addEventListener('click', function(event) {
+        event.preventDefault();
+        deleteAllItems();
+      });
+    }
+
+    // Update the item count in the mobile toggle
+    const itemCount = Object.values(selectedProducts).reduce((total, product) => total + product.quantity, 0);
+    const countElement = mobileToggle.querySelector('.sidecart-count');
+    countElement.textContent = `(${itemCount})`;
+
+    // Show/hide mobile toggle based on whether there are items in the cart
+    if (itemCount === 0) {
+      mobileToggle.style.display = 'none';
+      sidecart.classList.remove('active');
+      overlay.classList.remove('active');
+    } else {
+      mobileToggle.style.display = 'block';
+    }
+  }
+
+  function addToSidecart(event) {
+    const button = event.currentTarget;
+    const productId = button.getAttribute('data-product-id');
+    const variantId = button.getAttribute('data-variant-id');
+    const variantTitle = button.getAttribute('data-variant-title');
+    const productTitle = button.closest('.product-card').querySelector('.product-title').textContent;
+
+    // Create a unique key for each product variant combination
+    const key = `${productId}-${variantId}`;
+
+    if (selectedProducts[key]) {
+      selectedProducts[key].quantity += 1;
+    } else {
+      selectedProducts[key] = {
+        id: productId,
+        variantId: variantId,
+        variantTitle: variantTitle,
+        title: productTitle,
+        quantity: 1
+      };
+    }
+
+    updateSidecart();
+  }
+
+  function removeFromSidecart(event) {
+    const key = event.currentTarget.getAttribute('data-product-key');
+    delete selectedProducts[key];
+    updateSidecart();
+  }
+
+  function updateQuantity(event) {
+    const button = event.currentTarget;
+    const key = button.getAttribute('data-product-key');
+    const isIncrease = button.classList.contains('increase');
+    
+    if (selectedProducts[key]) {
+      selectedProducts[key].quantity += isIncrease ? 1 : -1;
+      if (selectedProducts[key].quantity < 1) {
+        selectedProducts[key].quantity = 1;
+      }
+      updateSidecart();
+    }
+  }
+
+  function updateQuantityFromInput(event) {
+    const input = event.currentTarget;
+    const key = input.getAttribute('data-product-key');
+    const newQuantity = parseInt(input.value, 10);
+    
+    if (selectedProducts[key] && newQuantity > 0) {
+      selectedProducts[key].quantity = newQuantity;
+      updateSidecart();
+    }
+  }
+
+  function deleteAllItems() {
+    selectedProducts = {};
+    updateSidecart();
+  }
+
+  addToSidecartButtons.forEach(button => {
+    button.addEventListener('click', addToSidecart);
+  });
+
+  addToCartButton2.addEventListener('click', async function(event) {
+    event.preventDefault();
+    const formData = new FormData(sidecartForm);
+    const response = await fetch('/cart/add.js', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    });
+
+    if (response.ok) {
+      const responseJson = await response.json();
+      document.documentElement.dispatchEvent(new CustomEvent('theme:loading:end', { bubbles: true }));
+      const cartContent = await (await fetch('/cart.js')).json();
+      cartContent['sections'] = responseJson['sections'];
+      document.documentElement.dispatchEvent(new CustomEvent('cart:change', {
+        bubbles: true,
+        detail: {
+          baseEvent: 'variant:add',
+          cart: cartContent
+        }
+      }));
+
+      // Clear the selection
+      deleteAllItems();
+
+      
+      // Update sidecart with success message
+      sidecartItems.innerHTML = '<div class="sidecart-text">Set added to the cart!</div>';
+      
+      // Hide the "Add to Cart" button
+      document.getElementById('add-to-cart-button').style.display = 'none';
+      
+      // Update mobile toggle
+      const mobileToggle = document.querySelector('.mobile-sidecart-toggle');
+      if (mobileToggle) {
+        mobileToggle.style.display = 'none';
+      }
+
+      // Automatically close the sidecart on mobile after a delay
+      setTimeout(() => {
+        const sidecart = document.querySelector('.sidecart');
+        const overlay = document.querySelector('.sidecart-overlay');
+        if (sidecart) sidecart.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+      }, 3000); // Close after 3 seconds
+    } else {
+      const responseJson = await response.json();
+      document.documentElement.dispatchEvent(new CustomEvent('cart:error', {
+        bubbles: true,
+        detail: {
+          error: responseJson['description']
+        }
+      }));
+    }
+  });
+});
+</script>
+
 
 {% schema %}
 {
